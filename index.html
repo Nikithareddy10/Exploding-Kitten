@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exploding Kittens Game</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #1f4068;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      .card {
+        width: 180px;
+        height: 250px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        display: inline-block;
+        margin: 20px;
+        padding: 20px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: scale(1.05);
+      }
+
+      .button {
+        padding: 10px 20px;
+        background-color: #ff6b6b;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #d63031;
+      }
+
+      .game-status {
+        font-weight: bold;
+        margin-top: 20px;
+        font-size: 24px;
+      }
+
+      #points {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .title {
+        font-size: 36px;
+        margin-bottom: 40px;
+      }
+
+      .card-icons {
+        font-size: 60px;
+        display: block;
+        margin-bottom: 10px; /* Added margin for spacing between emoji and text */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">🐱 Exploding Kittens Game 🐱</h1>
+      <div id="points">Points: <span id="pointsCount">0</span></div>
+      <div class="card" id="cat">
+        <span class="card-icons" onclick="drawCard('cat')">😼</span>
+        <br />
+        Cat
+      </div>
+      <div class="card" id="defuse">
+        <span class="card-icons" onclick="drawCard('defuse')">🙅‍♂️</span>
+        <br />
+        Defuse
+      </div>
+      <div class="card" id="shuffle">
+        <span class="card-icons" onclick="drawCard('shuffle')">🔀</span>
+        <br />
+        Shuffle
+      </div>
+      <div class="card" id="bomb">
+        <span class="card-icons" onclick="drawCard('bomb')">💣</span>
+        <br />
+        Exploding Kitten
+      </div>
+      <button class="button" onclick="startGame()">Start Game</button>
+      <div id="gameStatus" class="game-status"></div>
+    </div>
+
+    <script>
+      let deck = ["cat", "cat", "cat", "defuse", "shuffle", "bomb"];
+      let points = 0;
+      let gameStarted = false;
+
+      function shuffleDeck() {
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+      }
+
+      function startGame() {
+        if (!gameStarted) {
+          shuffleDeck();
+          gameStarted = true;
+        }
+      }
+
+      function drawCard(cardType) {
+        if (!gameStarted) {
+          alert("Please start the game first.");
+          return;
+        }
+
+        const drawnCard = deck.pop();
+
+        if (drawnCard === cardType) {
+          if (cardType === "bomb") {
+            document.getElementById("gameStatus").innerText =
+              "BOOM! You lost the game.";
+            gameStarted = false;
+          } else if (cardType === "defuse") {
+            points++;
+          }
+        } else {
+          document.getElementById("gameStatus").innerText =
+            "You drew a " + drawnCard.toUpperCase() + " card.";
+        }
+
+        if (deck.length === 0 && gameStarted) {
+          document.getElementById("gameStatus").innerText =
+            "Congratulations! You won the game.";
+          gameStarted = false;
+        }
+
+        document.getElementById("pointsCount").innerText = points;
+      }
+    </script>
+  </body>
+</html>
